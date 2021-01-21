@@ -17,15 +17,22 @@ class Task(object):
 
 		}
 		print("Creating example.")
-		with open(DIR+"/"+name+".json","w") as write_file:
-			json.dump(data, write_file)
+		try:
+			with open(DIR+name+".json","w+") as write_file:
+				json.dump(data, write_file)
+		except:
+			os.mkdir(DIR)
+		finally:
+			with open(DIR+name+".json","w+") as write_file:
+				json.dump(data, write_file)
+
 	def change_file(self,name,description,finished,file):
 		data = {
 			"name" : name,
 			"description" : description,
 			"finished" : finished
 		}
-		with open(file, "w") as write_file:
+		with open(DIR+file, "w") as write_file:
    			json.dump(data, write_file)
 	def __init__(self, name, description, finished):
 		# init task
@@ -78,7 +85,7 @@ def print_tasks():
 	# print of the files in current path and has format .json
 	for file in directories:
 		if file.endswith(".json"):
-			f = open(file,)
+			f = open(DIR+file,)
 			data = json.load(f)
 			data_name = data["name"]
 			print(data_name,"\n")
@@ -86,9 +93,10 @@ def print_tasks():
 	name = input("> ")
 	for file in directories:
 			if file.endswith(".json"):
-				filee = open(file,'r')
-				print(filee.read())
-				f = open(file,)
+				filee = open(DIR+file,'r')
+				# i did for debug
+				# print(filee.read())
+				f = open(DIR+file,)
 				data = json.load(f)
 				data_name = data["name"]
 				data_description = data["description"]
@@ -121,7 +129,7 @@ def delete_tasks():
 	# print of the files in current path and has format .json
 	for file in directories:
 		if file.endswith(".json"):
-			f = open(file,)
+			f = open(DIR+file,)
 			data = json.load(f)
 			data_name = data["name"]
 			print(data_name,"\n")
@@ -131,14 +139,14 @@ def delete_tasks():
 		# Check if format .json and name then print else "error"
 		for file in directories:
 			if file.endswith(".json"):
-				f = open(file,)
+				f = open(DIR+file,)
 				data = json.load(f)
 				data_name = data["name"]
 				if name == data_name:
 					print("\n")
 					print("DELETE!")
 					print("\n")
-					return os.remove(file)
+					return os.remove(DIR+file)
 	elif name == "deletingall":
 		flag = 1
 		print("\n")
@@ -146,7 +154,7 @@ def delete_tasks():
 		for file in directories:
 			if file.endswith(".json"):
 					print("DELETE FILE: ",file,"!")
-					os.remove(file)
+					os.remove(DIR+file)
 					print("\n")
 	if flag == 1:
 		pass 
@@ -169,7 +177,7 @@ def change_tasks():
 	# print of the files in current path and has format .json
 	for file in directories:
 		if file.endswith(".json"):
-			f = open(file,)
+			f = open(DIR+file,)
 			data = json.load(f)
 			data_name = data["name"]
 			print(data_name,"\n")
@@ -178,7 +186,7 @@ def change_tasks():
 	# Check if format .json and name then print else "error"
 	for file in directories:
 		if file.endswith(".json"):
-			f = open(file,)
+			f = open(DIR+file,)
 			data = json.load(f)
 			data_name = data["name"]
 			if name == data_name:
@@ -194,7 +202,7 @@ def change_tasks():
 		print('With name "NOT FOUND" task is not exist.\n\n')
 
 def change_current_task(name, description, finished,file):
-	os.remove(file)
+	os.remove(DIR+file)
 	task = Task("","",False)
 	print("Enter a name:")
 	name = input("> ")
